@@ -1,0 +1,88 @@
+/* ================= GLASS LOGIN ================= */
+.glass-login {
+  width: 350px;
+  padding: 25px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+/* ================= INPUT ================= */
+.glass-input {
+  border-radius: 10px;
+  border: none;
+  font-size: 14px;
+}
+
+/* ================= BUTTON ================= */
+.glass-btn {
+  border-radius: 20px;
+  font-size: 14px;
+  padding: 8px;
+}
+
+/* ================= RESPONSIVE ================= */
+
+/* TABLET */
+@media (max-width: 768px) {
+
+  .glass-login {
+    width: 300px;
+    padding: 20px;
+  }
+
+  .glass-login h3 {
+    font-size: 22px;
+  }
+
+  .glass-input {
+    font-size: 13px;
+    padding: 8px;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 480px) {
+
+  .gradient-custom {
+    padding: 0 !important;
+  }
+
+  .mask-custom {
+    border-radius: 0; /* 🔥 full screen */
+  }
+
+  .glass-login {
+    width: 90%;
+    padding: 18px;
+  }
+
+  .glass-login h3 {
+    font-size: 20px;
+  }
+
+  .glass-input {
+    font-size: 13px;
+  }
+
+  .glass-btn {
+    font-size: 13px;
+    padding: 7px;
+  }
+
+  /* HEADER FIX */
+  .d-flex.justify-content-between {
+    flex-direction: row;
+    padding: 10px 12px !important;
+  }
+
+  .d-flex.justify-content-between h5 {
+    font-size: 14px;
+  }
+
+  .btn-danger {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+}

@@ -1,0 +1,280 @@
+/* ================= OVERLAY ================= */
+.contact-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(3px);
+  z-index: 999;
+}
+
+/* ================= PANEL ================= */
+.contact-info-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 380px;
+  height: 100%;
+  background: #fff;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: -8px 0 30px rgba(0,0,0,0.15);
+}
+
+/* ================= SLIDE ================= */
+.slide-container {
+  display: flex;
+  width: 200%;
+  height: 100%;
+  transition: transform 0.3s ease;
+}
+
+.slide-container.slide {
+  transform: translateX(-50%);
+}
+
+.panel {
+  width: 50%;
+  overflow-y: auto;
+}
+
+/* ================= HEADER ================= */
+.contact-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: linear-gradient(to right, #ff8c42, #ff6a00);
+  color: white;
+}
+
+.close-contact-btn {
+  border: none;
+  background: rgba(255,255,255,0.3);
+  color: white;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}
+
+/* ================= PROFILE ================= */
+.contact-profile {
+  text-align: center;
+  padding: 20px;
+  background: #fff7f0;
+}
+
+.contact-profile-pic {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.group-dp-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.edit-dp-btn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: #ff8c42;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  color: white;
+  cursor: pointer;
+}
+
+/* ================= EDIT NAME ================= */
+.edit-name-container {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.edit-name-input {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+/* ================= MEMBERS ================= */
+.member-section {
+  padding: 15px;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+}
+
+.member-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  padding: 6px;
+  border-radius: 8px;
+  transition: 0.2s;
+}
+
+.member-row:hover {
+  background: #fff3e6;
+}
+
+.member-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.member-left img {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+}
+
+.admin-badge {
+  background: #ff8c42;
+  color: white;
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 6px;
+  margin-left: 5px;
+}
+
+.member-actions {
+  display: flex;
+  gap: 5px;
+}
+
+.member-actions button {
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: none;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* ================= ADD MEMBER ================= */
+.add-member-btn {
+  width: 100%;
+  margin-top: 10px;
+  padding: 8px;
+  background: #ff8c42;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* ================= TABS ================= */
+.contact-tabs {
+  display: flex;
+  border-bottom: 1px solid #eee;
+}
+
+.contact-tabs button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  background: white;
+  cursor: pointer;
+}
+
+.contact-tabs .active {
+  border-bottom: 3px solid #ff8c42;
+  color: #ff8c42;
+}
+
+/* ================= MEDIA ================= */
+.media-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  padding: 10px;
+}
+
+.media-item {
+  width: 100%;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* ================= ADD PANEL ================= */
+.add-panel {
+  padding: 15px;
+  background: #f8f9fb;
+}
+
+.add-panel label {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.add-panel button {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  background: #ff8c42;
+  color: white;
+  border: none;
+  border-radius: 8px;
+}
+
+/* ================= EXIT BUTTON ================= */
+.block-btn {
+  width: 90%;
+  margin: 15px auto;
+  padding: 10px;
+  background: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 10px;
+}
+
+/* ================= RESPONSIVE ================= */
+
+/* TABLET */
+@media (max-width: 768px) {
+  .contact-info-panel {
+    width: 300px;
+  }
+
+  .media-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* MOBILE */
+@media (max-width: 480px) {
+  .contact-info-panel {
+    width: 100%;
+  }
+
+  .contact-profile-pic {
+    width: 80px;
+    height: 80px;
+  }
+
+  .member-actions {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .member-actions button {
+    font-size: 11px;
+    padding: 3px 6px;
+  }
+
+  .media-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

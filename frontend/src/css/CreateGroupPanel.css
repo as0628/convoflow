@@ -1,0 +1,181 @@
+/* ================= OVERLAY ================= */
+.contact-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(3px);
+  z-index: 999;
+}
+
+/* ================= PANEL ================= */
+.contact-info-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 380px;
+  height: 100%;
+  background: #ffffff;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -8px 0 30px rgba(0,0,0,0.15);
+  animation: slideIn 0.3s ease forwards;
+  overflow-y: auto;
+}
+
+@keyframes slideIn {
+  from { right: -400px; }
+  to { right: 0; }
+}
+
+/* ================= HEADER ================= */
+.contact-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 18px;
+  background: linear-gradient(to right, #ff8c42, #ff6a00);
+  color: white;
+}
+
+.contact-header h4 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.close-contact-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.25);
+  color: white;
+  cursor: pointer;
+}
+
+.close-contact-btn:hover {
+  background: rgba(255,255,255,0.4);
+}
+
+/* ================= INPUTS ================= */
+.form-control {
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+/* ================= USER LIST ================= */
+.user-search-list {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.user-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.user-row:hover {
+  background: #fff3e6;
+}
+
+.user-row img {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* ================= SELECTED USERS ================= */
+.selected-users {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 5px;
+}
+
+.selected-chip {
+  background: #ff8c42;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.remove-chip {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* ================= BUTTON ================= */
+.create-group-btn {
+  width: 100%;
+  padding: 10px;
+  background: #ff8c42;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.create-group-btn:hover {
+  background: #e6762f;
+}
+
+/* ================= RESPONSIVE ================= */
+
+/* TABLET */
+@media (max-width: 768px) {
+  .contact-info-panel {
+    width: 300px;
+  }
+
+  .user-row img {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 480px) {
+  .contact-info-panel {
+    width: 100%; /* 🔥 full screen */
+  }
+
+  .contact-header h4 {
+    font-size: 14px;
+  }
+
+  .form-control {
+    font-size: 13px;
+    padding: 8px;
+  }
+
+  .user-row {
+    padding: 6px;
+  }
+
+  .user-row img {
+    width: 30px;
+    height: 30px;
+  }
+
+  .selected-chip {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+
+  .create-group-btn {
+    font-size: 14px;
+    padding: 9px;
+  }
+}

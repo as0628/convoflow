@@ -1,0 +1,151 @@
+/* ================= OVERLAY ================= */
+.profile-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+  z-index: 2000;
+}
+
+/* ================= MODAL ================= */
+.profile-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 420px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  z-index: 2001;
+  overflow: hidden;
+  animation: fadeIn 0.3s ease;
+}
+
+/* ANIMATION */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translate(-50%, -55%); }
+  to { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+/* ================= HEADER ================= */
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background: linear-gradient(to right, #ff8c42, #ff6a00);
+  color: white;
+}
+
+.profile-header h4 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.profile-header button {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* ================= BODY ================= */
+.profile-body {
+  padding: 20px;
+}
+
+/* ================= IMAGE ================= */
+.profile-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #ff8c42;
+}
+
+/* ================= TEXT ================= */
+.profile-body p {
+  margin: 6px 0;
+  font-size: 14px;
+}
+
+/* ================= INPUTS ================= */
+.profile-body input,
+.profile-body textarea {
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+/* ================= BUTTONS ================= */
+.profile-btn {
+  width: 100%;
+  padding: 10px;
+  background: #ff8c42;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.profile-btn:hover {
+  background: #e6762f;
+}
+
+.profile-cancel-btn {
+  width: 100%;
+  padding: 10px;
+  background: #ddd;
+  border: none;
+  border-radius: 10px;
+  margin-top: 8px;
+  cursor: pointer;
+}
+
+/* ================= RESPONSIVE ================= */
+
+/* TABLET */
+@media (max-width: 768px) {
+  .profile-modal {
+    width: 90%;
+  }
+
+  .profile-image {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 480px) {
+  .profile-modal {
+    width: 95%;
+    border-radius: 12px;
+  }
+
+  .profile-body {
+    padding: 15px;
+  }
+
+  .profile-image {
+    width: 90px;
+    height: 90px;
+  }
+
+  .profile-body p {
+    font-size: 13px;
+  }
+
+  .profile-btn,
+  .profile-cancel-btn {
+    font-size: 14px;
+    padding: 9px;
+  }
+}
+.profile-image:hover {
+  transform: scale(1.05);
+  transition: 0.3s;
+}
