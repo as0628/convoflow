@@ -65,7 +65,7 @@ const GroupInfo = ({ group, messages, onClose }) => {
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/groups/update-name",
+        `${process.env.REACT_APP_API_URL}/groups/update-name`,
         {
           groupId: groupData._id,
           name: newGroupName,
@@ -86,7 +86,7 @@ const GroupInfo = ({ group, messages, onClose }) => {
 
   const refreshGroup = async () => {
     const res = await axios.get(
-      "http://localhost:5000/api/groups",
+      `${process.env.REACT_APP_API_URL}/groups`,
       { headers: { Authorization: `Bearer ${token}` } }
     );
 
@@ -126,7 +126,7 @@ const GroupInfo = ({ group, messages, onClose }) => {
 
   const handleRemoveMember = async (userId) => {
     await axios.post(
-      "http://localhost:5000/api/groups/remove-member",
+      `${process.env.REACT_APP_API_URL}/groups/remove-member`,
       { groupId: groupData._id, userId },
       { headers: { Authorization: `Bearer ${token}` } }
     );
@@ -135,7 +135,7 @@ const GroupInfo = ({ group, messages, onClose }) => {
 
   const handleMakeAdmin = async (userId) => {
     await axios.post(
-      "http://localhost:5000/api/groups/make-admin",
+      `${process.env.REACT_APP_API_URL}/groups/make-admin`,
       { groupId: groupData._id, userId },
       { headers: { Authorization: `Bearer ${token}` } }
     );
@@ -144,7 +144,7 @@ const GroupInfo = ({ group, messages, onClose }) => {
 
   const handleRemoveAdmin = async (userId) => {
     await axios.post(
-      "http://localhost:5000/api/groups/remove-admin",
+      `${process.env.REACT_APP_API_URL}/groups/remove-admin`,
       { groupId: groupData._id, userId },
       { headers: { Authorization: `Bearer ${token}` } }
     );
@@ -155,7 +155,7 @@ const GroupInfo = ({ group, messages, onClose }) => {
 
   const openAddPanel = async () => {
   const res = await axios.get(
-    `http://localhost:5000/api/groups/available-users/${groupData._id}`,
+    `${process.env.REACT_APP_API_URL}/groups/available-users/${groupData._id}`,
     { headers: { Authorization: `Bearer ${token}` } }
   );
 
@@ -183,7 +183,7 @@ const GroupInfo = ({ group, messages, onClose }) => {
     }
 
     await axios.post(
-      "http://localhost:5000/api/groups/add-member",
+     ` ${process.env.REACT_APP_API_URL}/groups/add-member`,
       { groupId: groupData._id, userId },
       { headers: { Authorization: `Bearer ${token}` } }
     );
@@ -204,7 +204,7 @@ const GroupInfo = ({ group, messages, onClose }) => {
     formData.append("file", file);
 
     await axios.put(
-      "http://localhost:5000/api/groups/update-pic",
+      `${process.env.REACT_APP_API_URL}/groups/update-pic`,
       formData,
       {
         headers: {
@@ -221,7 +221,7 @@ const GroupInfo = ({ group, messages, onClose }) => {
 
   const handleExitGroup = async () => {
     await axios.post(
-      "http://localhost:5000/api/groups/leave",
+      `${process.env.REACT_APP_API_URL}/groups/leave`,
       { groupId: groupData._id },
       { headers: { Authorization: `Bearer ${token}` } }
     );

@@ -5,7 +5,7 @@ import {
   sendSocketMessage,
   disconnectSocket,
   sendTypingEvent,
-  sendStopTypingEvent,sendSeenEvent,
+  sendStopTypingEvent,
 } from "../socket";
 import ContactInfo from "./ContactInfo";
 import { encryptMessage, decryptMessage,} from "../utils/encryption";
@@ -201,7 +201,7 @@ const ChatWindow = ({ chat }) => {
     const loadMessages = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5000/api/messages/${chat._id}`,
+          `${process.env.REACT_APP_API_URL}/messages/${chat._id}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -253,7 +253,7 @@ const ChatWindow = ({ chat }) => {
   const markSeen = async () => {
     try {
       await axios.put(
-        "http://localhost:5000/api/messages/seen/chat",
+        `${process.env.REACT_APP_API_URL}/messages/seen/chat`,
         { chatId: chat._id },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -276,7 +276,7 @@ const ChatWindow = ({ chat }) => {
   const deleteMessage = async (messageId, deleteType) => {
   try {
     await axios.put(
-      "http://localhost:5000/api/messages/delete",
+      `${process.env.REACT_APP_API_URL}/messages/delete`,
       { messageId, deleteType }, // ✅ now correct
       {
         headers: { Authorization: `Bearer ${token}` },
@@ -290,7 +290,7 @@ const ChatWindow = ({ chat }) => {
 const clearChat = async () => {
   try {
     await axios.put(
-      `http://localhost:5000/api/messages/clear/${chat._id}`,
+      `${process.env.REACT_APP_API_URL}/messages/clear/${chat._id}`,
       {},
       {
         headers: { Authorization: `Bearer ${token}` },
@@ -307,7 +307,7 @@ const clearChat = async () => {
 const deleteChat = async () => {
   try {
     await axios.delete(
-      `http://localhost:5000/api/messages/${chat._id}`,
+      `${process.env.REACT_APP_API_URL}/messages/${chat._id}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -339,7 +339,7 @@ const deleteChat = async () => {
       if (file) formData.append("file", file);
 
       const res = await axios.post(
-        "http://localhost:5000/api/messages",
+        `${process.env.REACT_APP_API_URL}/messages`,
         formData,
         {
           headers: { Authorization: `Bearer ${token}` },

@@ -70,7 +70,7 @@ const CreateGroupPanel = ({ onClose }) => {
 
     try {
       await axios.post(
-        "http://localhost:5000/api/groups",
+        `${process.env.REACT_APP_API_URL}/groups`,
         {
           name: groupName,
           members: selectedUsers.map((u) => u._id),

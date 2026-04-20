@@ -16,7 +16,7 @@ const ProfilePanel = ({ onClose }) => {
     const fetchUser = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:5000/api/users/me",
+          `${process.env.REACT_APP_API_URL}/users/me`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
@@ -42,7 +42,7 @@ const ProfilePanel = ({ onClose }) => {
       }
 
       const res = await axios.put(
-        "http://localhost:5000/api/users/profile",
+        `${process.env.REACT_APP_API_URL}/users/profile`,
         formData,
         { headers: { Authorization: `Bearer ${token}` } }
       );

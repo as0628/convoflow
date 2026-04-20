@@ -120,7 +120,7 @@ const ContactInfo = ({ user, messages, onClose }) => {
 
     if (!isBlocked) {
       await axios.post(
-        "http://localhost:5000/api/users/block",
+        `${process.env.REACT_APP_API_URL}/users/block`,
         { userIdToBlock: user._id },
         config
       );
@@ -132,7 +132,7 @@ const ContactInfo = ({ user, messages, onClose }) => {
       }
     } else {
       await axios.post(
-        "http://localhost:5000/api/users/unblock",
+        `${process.env.REACT_APP_API_URL}/users/unblock`,
         { userIdToUnblock: user._id },
         config
       );

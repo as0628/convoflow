@@ -46,7 +46,7 @@ const GroupChatWindow = ({ group }) => {
   const markRead = async () => {
     try {
       await axios.put(
-        `http://localhost:5000/api/groups/read/${group._id}`,
+        `${process.env.REACT_APP_API_URL}/groups/read/${group._id}`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -73,7 +73,7 @@ const GroupChatWindow = ({ group }) => {
     const loadMessages = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5000/api/groups/messages/${group._id}`,
+          `${process.env.REACT_APP_API_URL}/groups/messages/${group._id}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setMessages(Array.isArray(res.data) ? res.data : []);
@@ -155,7 +155,7 @@ window.dispatchEvent(
       if (file) formData.append("file", file);
 
       const res = await axios.post(
-        "http://localhost:5000/api/groups/message",
+        `${process.env.REACT_APP_API_URL}/groups/message`,
         formData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -174,7 +174,7 @@ window.dispatchEvent(
   const clearChat = async () => {
   try {
     await axios.put(
-      `http://localhost:5000/api/groups/group/clear/${group._id}`,
+      `${process.env.REACT_APP_API_URL}/groups/group/clear/${group._id}`,
       {},
       {
         headers: { Authorization: `Bearer ${token}` },
@@ -192,7 +192,7 @@ window.dispatchEvent(
   const deleteMessage = async (messageId, deleteType) => {
   try {
     await axios.put(
-      "http://localhost:5000/api/groups/group/delete",
+      `${process.env.REACT_APP_API_URL}/groups/group/delete`,
       { messageId, deleteType },
       {
         headers: { Authorization: `Bearer ${token}` },

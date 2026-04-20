@@ -12,7 +12,7 @@ const BlockedUsersPanel = ({ onClose }) => {
 
   const fetchBlocked = async () => {
     const res = await axios.get(
-      "http://localhost:5000/api/users/blocked",
+      `${process.env.REACT_APP_API_URL}/users/blocked`,
       { headers: { Authorization: `Bearer ${token}` } }
     );
     setBlockedUsers(res.data);
@@ -20,7 +20,7 @@ const BlockedUsersPanel = ({ onClose }) => {
 
   const handleUnblock = async (userId) => {
     await axios.post(
-      "http://localhost:5000/api/users/unblock",
+      `${process.env.REACT_APP_API_URL}/users/unblock`,
       { userIdToUnblock: userId },
       { headers: { Authorization: `Bearer ${token}` } }
     );
