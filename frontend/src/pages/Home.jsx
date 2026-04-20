@@ -70,50 +70,40 @@ const Home = () => {
       </div>
 
       {/* ===== MAIN CONTENT ===== */}
-      <div
-        className="d-flex flex-grow-1"
-        style={{ overflow: "hidden" }}
-      >
-        {/* SIDEBAR */}
-        {/* SIDEBAR */}
-<div
-  className={selectedChat || selectedGroup ? "mobile-hide" : ""}
-  style={{
-    width: "30%",
-    minWidth: "280px",
-    borderRight: "1px solid rgba(255,255,255,0.05)",
-    overflow: "hidden",
-  }}
->
-  <Sidebar
-  setSelectedChat={setSelectedChat}
-  setSelectedGroup={setSelectedGroup}
-  setShowCreateGroup={setShowCreateGroup}
-  setShowBlockedUsers={setShowBlockedUsers}
-/>
-</div>
+      <div className="main-layout">
+  {/* SIDEBAR */}
+  <div
+    className={`sidebar-area ${
+      selectedChat || selectedGroup ? "mobile-hide" : ""
+    }`}
+  >
+    <Sidebar
+      setSelectedChat={setSelectedChat}
+      setSelectedGroup={setSelectedGroup}
+      setShowCreateGroup={setShowCreateGroup}
+      setShowBlockedUsers={setShowBlockedUsers}
+    />
+  </div>
 
-        {/* CHAT AREA */}
-        <div
-          style={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            overflow: "hidden",
-          }}
-        >
-          {selectedGroup ? (
-            <GroupChatWindow group={selectedGroup} />
-          ) : selectedChat ? (
-            <ChatWindow chat={selectedChat} />
-          ) : (
-            <div className="d-flex justify-content-center align-items-center h-100 text-white">
-              <h2>Select a chat</h2>
-            </div>
-          )}
-        </div>
-        
+  {/* CHAT AREA */}
+  <div
+    className={`chat-area ${
+      selectedChat || selectedGroup
+        ? "mobile-chat-show"
+        : "mobile-chat-hide"
+    }`}
+  >
+    {selectedGroup ? (
+      <GroupChatWindow group={selectedGroup} />
+    ) : selectedChat ? (
+      <ChatWindow chat={selectedChat} />
+    ) : (
+      <div className="home-empty">
+        <h2>Select a chat</h2>
       </div>
+    )}
+  </div>
+</div>
       {/* 👇 PLACE PANEL HERE (OUTSIDE FLEX) */}
 {showCreateGroup && (
   <CreateGroupPanel
