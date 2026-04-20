@@ -413,13 +413,13 @@ const Sidebar = ({
 
       {/* Profile */}
       <div
-        onClick={() => {
-          navigate("/profile");
-          setShowMenu(false);
-        }}
-      >
-        Profile
-      </div>
+  onClick={() => {
+    navigate("/profile");
+    setShowMenu(false);
+  }}
+>
+  Profile
+</div>
 
       {/* Blocked Users */}
       <div
