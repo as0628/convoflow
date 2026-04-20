@@ -338,17 +338,19 @@ const deleteChat = async () => {
       formData.append("chatId", chat._id);
       if (file) formData.append("file", file);
 
-      const res = await axios.post(
-        `${process.env.REACT_APP_API_URL}/messages`,
-        formData,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-
-      sendSocketMessage(chat._id, res.data);
       
-      sendStopTypingEvent(chat._id, loggedInUserId, "chat");
+        const res = await axios.post(
+  `${process.env.REACT_APP_API_URL}/messages`,
+  formData,
+  {
+    headers: { Authorization: `Bearer ${token}` },
+  }
+);
+
+// 🔥 show instantly in sender chat
+setMessages((prev) => [...prev, res.data]);
+sendSocketMessage(chat._id, res.data);
+sendStopTypingEvent(chat._id, loggedInUserId, "chat");
 
       setText("");
       setFile(null);

@@ -34,7 +34,12 @@ export const connectSocket = (
   currentRoomType = roomType;
   currentUserId = userId;
 
-  socket = new WebSocket("ws://localhost:5000/");
+  const WS_URL =
+  window.location.hostname === "localhost"
+    ? "ws://localhost:5000"
+    : "wss://convoflow-backend-f47b.onrender.com";
+
+socket = new WebSocket(WS_URL);
 
   socket.onopen = () => {
     console.log("🟢 Connected");
