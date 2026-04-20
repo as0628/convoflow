@@ -9,6 +9,7 @@ import {
   sendSeenEvent,
   disconnectSocket,
 } from "../socket";
+import { encryptMessage, decryptMessage,} from "../utils/encryption";
 import "../css/groupchatwindow.css";
 
 const GroupChatWindow = ({ group }) => {
@@ -149,7 +150,7 @@ window.dispatchEvent(
 
     try {
       const formData = new FormData();
-      formData.append("content", text);
+      formData.append("content", encryptMessage(text));
       formData.append("groupId", group._id);
       if (file) formData.append("file", file);
 
@@ -546,7 +547,7 @@ const getDateLabel = (dateString) => {
                   ) : (
                     m.content && (
                       <p style={{ marginBottom: "5px" }}>
-                        {m.content}
+                       {decryptMessage(m.content)}
                       </p>
                     )
                   )}

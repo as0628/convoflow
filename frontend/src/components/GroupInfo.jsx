@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import "../css/groupinfo.css";
+import { createPortal } from "react-dom";
 
 const GroupInfo = ({ group, messages, onClose }) => {
   const [groupData, setGroupData] = useState(group);
@@ -17,6 +18,7 @@ const GroupInfo = ({ group, messages, onClose }) => {
   const [showAddPanel, setShowAddPanel] = useState(false);
   const [availableUsers, setAvailableUsers] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
 
   const touchStartX = useRef(null);
   const fileInputRef = useRef(null);
@@ -152,29 +154,45 @@ const GroupInfo = ({ group, messages, onClose }) => {
   /* ================= ADD MEMBER ================= */
 
   const openAddPanel = async () => {
-    const res = await axios.get(
-      `http://localhost:5000/api/groups/available-users/${groupData._id}`,
-      { headers: { Authorization: `Bearer ${token}` } }
+  const res = await axios.get(
+    `http://localhost:5000/api/groups/available-users/${groupData._id}`,
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+
+  // 🔥 Hide AI Assistant
+  const filteredUsers = res.data.filter(
+    (user) =>
+      user.name?.toLowerCase() !== "ai assistant"
+  );
+
+  setAvailableUsers(filteredUsers);
+  setShowAddPanel(true);
+};
+ const handleAddMembers = async () => {
+  for (let userId of selectedUsers) {
+    const selectedUser = availableUsers.find(
+      (u) => u._id === userId
     );
 
-    setAvailableUsers(res.data);
-    setShowAddPanel(true);
-  };
-
-  const handleAddMembers = async () => {
-    for (let userId of selectedUsers) {
-      await axios.post(
-        "http://localhost:5000/api/groups/add-member",
-        { groupId: groupData._id, userId },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+    // 🔥 Extra protection
+    if (
+      selectedUser?.name?.toLowerCase() ===
+      "ai assistant"
+    ) {
+      continue;
     }
 
-    setSelectedUsers([]);
-    setShowAddPanel(false);
-    refreshGroup();
-  };
+    await axios.post(
+      "http://localhost:5000/api/groups/add-member",
+      { groupId: groupData._id, userId },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+  }
 
+  setSelectedUsers([]);
+  setShowAddPanel(false);
+  refreshGroup();
+};
   /* ================= GROUP DP ================= */
 
   const handleGroupPicChange = async (e) => {
@@ -290,8 +308,9 @@ const GroupInfo = ({ group, messages, onClose }) => {
                   <div key={member._id} className="member-row">
                     <div className="member-left">
                       <img src={member.profilePic} alt="" />
-                      <span>
+                      <span className="member-name">
                         {member.name}
+                        
                         {member._id === loggedInUserId && " (You)"}
                         {memberIsAdmin && (
                           <span className="admin-badge">Admin</span>
@@ -445,7 +464,7 @@ const GroupInfo = ({ group, messages, onClose }) => {
             <div style={{ marginTop: 20 }}>
               <button
                 className="block-btn"
-                onClick={handleExitGroup}
+                onClick={() => setShowExitConfirm(true)}
               >
                 🚪 Exit Group
               </button>
@@ -492,106 +511,99 @@ const GroupInfo = ({ group, messages, onClose }) => {
 
         </div>
       </div>
-      {/* PREVIEW MODAL */}
-      {previewIndex !== null && (
-  <div className="media-preview-overlay">
-    
-    {/* CLOSE */}
-    <button
-      className="close-preview"
-      onClick={() => {
-        setPreviewIndex(null);
-        setZoom(1);
-      }}
-    >
-      ✕
-    </button>
-    <button
-  className="download-icon-btn"
-  onClick={() =>
-    handleDownload(
-      media[previewIndex]?.mediaUrl,
-      media[previewIndex]?.mediaName || "media"
-    )
-  }
->
-  ⬇
-</button>
+      {showExitConfirm && (
+  <div className="exit-confirm-overlay">
+    <div className="exit-confirm-box">
+      <h4>Exit Group?</h4>
+      <p>Do you want to exit this group?</p>
 
-    {/* LEFT */}
-    <button
-      className="nav-btn left"
-      onClick={() =>
-        setPreviewIndex((prev) =>
-          prev > 0 ? prev - 1 : media.length - 1
-        )
-      }
-    >
-      ◀
-    </button>
+      <div className="exit-confirm-actions">
+        <button
+          className="cancel-exit-btn"
+          onClick={() => setShowExitConfirm(false)}
+        >
+          No
+        </button>
 
-    {/* RIGHT */}
-    <button
-      className="nav-btn right"
-      onClick={() =>
-        setPreviewIndex((prev) =>
-          prev < media.length - 1 ? prev + 1 : 0
-        )
-      }
-    >
-      ▶
-    </button>
-
-    {/* MEDIA */}
-    <div
-      className="preview-content"
-      onWheel={(e) => {
-        if (e.deltaY < 0) {
-          setZoom((z) => Math.min(z + 0.2, 3));
-        } else {
-          setZoom((z) => Math.max(z - 0.2, 1));
-        }
-      }}
-      onTouchStart={(e) => {
-        touchStartX.current = e.touches[0].clientX;
-      }}
-      onTouchEnd={(e) => {
-        const diff =
-          touchStartX.current - e.changedTouches[0].clientX;
-
-        if (diff > 50) {
-          setPreviewIndex((prev) =>
-            prev < media.length - 1 ? prev + 1 : 0
-          );
-        } else if (diff < -50) {
-          setPreviewIndex((prev) =>
-            prev > 0 ? prev - 1 : media.length - 1
-          );
-        }
-      }}
-    >
-      {media[previewIndex]?.mediaType.startsWith("image") ? (
-        <img
-          src={media[previewIndex].mediaUrl}
-          style={{
-            transform: `scale(${zoom})`,
-            transition: "0.2s",
-            maxWidth: "90%",
-            maxHeight: "90%",
-          }}
-          alt=""
-        />
-      ) : (
-        <video
-          src={media[previewIndex].mediaUrl}
-          controls
-          autoPlay
-          style={{ maxWidth: "90%", maxHeight: "90%" }}
-        />
-      )}
+        <button
+          className="yes-exit-btn"
+          onClick={handleExitGroup}
+        >
+          Yes
+        </button>
+      </div>
     </div>
   </div>
 )}
+      {/* PREVIEW MODAL */}
+    {previewIndex !== null &&
+  createPortal(
+    <div className="media-preview-overlay">
+      <button
+        className="close-preview"
+        onClick={() => {
+          setPreviewIndex(null);
+          setZoom(1);
+        }}
+      >
+        ✕
+      </button>
+
+      <button
+        className="download-icon-btn"
+        onClick={() =>
+          handleDownload(
+            media[previewIndex]?.mediaUrl,
+            media[previewIndex]?.mediaName || "media"
+          )
+        }
+      >
+        ⬇
+      </button>
+
+      <button
+        className="nav-btn left"
+        onClick={() =>
+          setPreviewIndex((prev) =>
+            prev > 0 ? prev - 1 : media.length - 1
+          )
+        }
+      >
+        ◀
+      </button>
+
+      <button
+        className="nav-btn right"
+        onClick={() =>
+          setPreviewIndex((prev) =>
+            prev < media.length - 1 ? prev + 1 : 0
+          )
+        }
+      >
+        ▶
+      </button>
+
+      <div className="preview-content">
+        {media[previewIndex]?.mediaType.startsWith("image") ? (
+          <img
+            src={media[previewIndex].mediaUrl}
+            alt=""
+            style={{
+              transform: `scale(${zoom})`,
+              transition: "0.2s"
+            }}
+          />
+        ) : (
+          <video
+            src={media[previewIndex].mediaUrl}
+            controls
+            autoPlay
+          />
+        )}
+      </div>
+    </div>,
+    document.body
+  )}
     </>
   );
 };

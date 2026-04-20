@@ -8,6 +8,7 @@ import {
   sendStopTypingEvent,sendSeenEvent,
 } from "../socket";
 import ContactInfo from "./ContactInfo";
+import { encryptMessage, decryptMessage,} from "../utils/encryption";
 import "../css/chatwindow.css";
 
 const ChatWindow = ({ chat }) => {
@@ -20,6 +21,7 @@ const ChatWindow = ({ chat }) => {
   const [lastSeen, setLastSeen] = useState(null);
   const [showMenu, setShowMenu] = useState(false);
   const [activeMessage, setActiveMessage] = useState(null);
+  const [isBlocked, setIsBlocked] = useState(false);
 
   const chatEndRef = useRef(null);
   const typingTimeoutRef = useRef(null);
@@ -81,15 +83,36 @@ const ChatWindow = ({ chat }) => {
     
 
   /* ================= INITIAL ONLINE STATUS ================= */
-  useEffect(() => {
-    if (!otherUser?._id) return;
-    setIsOnline(otherUser.isOnline ?? false);
-    setLastSeen(otherUser.lastSeen ?? null);
-  }, [otherUser?._id]);
+ useEffect(() => {
+  if (!otherUser?._id) return;
+
+  const blockedUsers =
+    JSON.parse(localStorage.getItem("blockedUsers")) || [];
+
+  const isBlockedUser = blockedUsers.includes(otherUser._id);
+
+  if (isBlockedUser) {
+    setIsOnline(false);
+    setLastSeen(null);
+  } else {
+    setIsOnline(otherUser?.isOnline ?? false);
+    setLastSeen(otherUser?.lastSeen ?? null);
+  }
+}, [otherUser]);
+
+
 
   /* ================= ONLINE / OFFLINE LISTENER ================= */
   useEffect(() => {
     if (!otherUser?._id) return;
+    const blockedUsers =
+    JSON.parse(localStorage.getItem("blockedUsers")) || [];
+
+  if (blockedUsers.includes(otherUser._id)) {
+    setIsOnline(false);
+    setLastSeen(null);
+    return;
+  }
 
     const handleOnline = (e) => {
       if (e.detail === otherUser._id) {
@@ -98,23 +121,23 @@ const ChatWindow = ({ chat }) => {
       }
     };
 
-    const handleOffline = (e) => {
-      if (e.detail.userId === otherUser._id) {
-        setIsOnline(false);
-        setLastSeen(e.detail.lastSeen);
-      }
-    };
+     const handleOffline = (e) => {
+    if (e.detail.userId === otherUser._id) {
+      setIsOnline(false);
+      setLastSeen(e.detail.lastSeen);
+    }
+  };
 
-    window.addEventListener("user-online", handleOnline);
-    window.addEventListener("user-offline", handleOffline);
+  window.addEventListener("user-online", handleOnline);
+  window.addEventListener("user-offline", handleOffline);
 
-    return () => {
-      window.removeEventListener("user-online", handleOnline);
-      window.removeEventListener("user-offline", handleOffline);
-    };
-  }, [otherUser?._id]);
+  return () => {
+    window.removeEventListener("user-online", handleOnline);
+    window.removeEventListener("user-offline", handleOffline);
+  };
+}, [otherUser]);
 
-  /* ================= TYPING LISTENER ================= */
+ /* ================= TYPING LISTENER ================= */
   useEffect(() => {
     if (!otherUser?._id) return;
 
@@ -303,13 +326,15 @@ const deleteChat = async () => {
   }
 };
   /* ================= SEND MESSAGE ================= */
+  
   const sendMessage = async () => {
     if (!chat?._id) return;
     if (!text.trim() && !file) return;
+    // if (isBlocked) return;
 
     try {
       const formData = new FormData();
-      formData.append("content", text);
+      formData.append("content", encryptMessage(text));
       formData.append("chatId", chat._id);
       if (file) formData.append("file", file);
 
@@ -553,7 +578,7 @@ return (
                     </p>
                   ) : (
                     m.content && (
-                      <p style={{ marginBottom: "5px" }}>{m.content}</p>
+                      <p style={{ marginBottom: "5px" }}>{decryptMessage(m.content)}</p>
                     )
                   )}
 
@@ -624,82 +649,102 @@ return (
 
     {/* ================= INPUT ================= */}
     <div
-      className="chat-input d-flex flex-column mt-3"
-      style={{ gap: "6px" }}
-    >
-      {file && (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            background: "rgba(0,0,0,0.3)",
-            padding: "6px 10px",
-            borderRadius: "10px",
-            width: "fit-content",
-            color: "white",
-          }}
-        >
-          📎 {file.name}
-          <button
-            onClick={() => setFile(null)}
-            style={{
-              marginLeft: "8px",
-              border: "none",
-              background: "transparent",
-              color: "red",
-              cursor: "pointer",
-            }}
-          >
-
-            ✖
-          </button>
-        </div>
-      )}
-      <div style={{ fontSize: "11px", opacity: 0.6 }}>
-  {chat.latestMessage?.createdAt &&
-    new Date(chat.latestMessage.createdAt).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    })}
-</div>
-
-      <div className="d-flex align-items-center" style={{ gap: "10px" }}>
-        <input
-          type="file"
-          id="fileUpload"
-          style={{ display: "none" }}
-          onChange={(e) => setFile(e.target.files[0])}
-        />
-
-        <label htmlFor="fileUpload" style={{ cursor: "pointer" }}>
-          📎
-        </label>
-
-        <input
-          value={text}
-          onChange={(e) => {
-            setText(e.target.value);
-
-            sendTypingEvent(chat._id, loggedInUserId, "chat");
-
-            clearTimeout(typingTimeoutRef.current);
-
-            typingTimeoutRef.current = setTimeout(() => {
-              sendStopTypingEvent(chat._id, loggedInUserId, "chat");
-            }, 1500);
-          }}
-          placeholder="Type a message"
-          style={{
-            flex: 1,
-            padding: "8px 12px",
-            borderRadius: "20px",
-            border: "none",
-          }}
-        />
-
-        <button onClick={sendMessage}>Send</button>
-      </div>
+  className="chat-input d-flex flex-column mt-3"
+  style={{ gap: "6px" }}
+>
+  {isBlocked && (
+    <div className="blocked-banner">
+      🚫 You blocked this user. Unblock to continue chatting.
     </div>
+  )}
+
+  {file && !isBlocked && (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        background: "rgba(0,0,0,0.3)",
+        padding: "6px 10px",
+        borderRadius: "10px",
+        width: "fit-content",
+        color: "white",
+      }}
+    >
+      📎 {file.name}
+      <button
+        onClick={() => setFile(null)}
+        style={{
+          marginLeft: "8px",
+          border: "none",
+          background: "transparent",
+          color: "red",
+          cursor: "pointer",
+        }}
+      >
+        ✖
+      </button>
+    </div>
+  )}
+
+  <div className="d-flex align-items-center" style={{ gap: "10px" }}>
+    <input
+      type="file"
+      id="fileUpload"
+      style={{ display: "none" }}
+      disabled={isBlocked}
+      onChange={(e) => setFile(e.target.files[0])}
+    />
+
+    <label
+      htmlFor="fileUpload"
+      style={{
+        cursor: isBlocked ? "not-allowed" : "pointer",
+        opacity: isBlocked ? 0.5 : 1,
+      }}
+    >
+      📎
+    </label>
+
+    <input
+      value={text}
+      disabled={isBlocked}
+      onChange={(e) => {
+        setText(e.target.value);
+
+        sendTypingEvent(chat._id, loggedInUserId, "chat");
+
+        clearTimeout(typingTimeoutRef.current);
+
+        typingTimeoutRef.current = setTimeout(() => {
+          sendStopTypingEvent(chat._id, loggedInUserId, "chat");
+        }, 1500);
+      }}
+      placeholder={
+        isBlocked
+          ? "Unblock user to send message"
+          : "Type a message"
+      }
+      style={{
+        flex: 1,
+        padding: "8px 12px",
+        borderRadius: "20px",
+        border: "none",
+        opacity: isBlocked ? 0.7 : 1,
+      }}
+    />
+
+    <button
+      onClick={sendMessage}
+      disabled={isBlocked}
+      style={{
+        opacity: isBlocked ? 0.6 : 1,
+        cursor: isBlocked ? "not-allowed" : "pointer",
+      }}
+    >
+      Send
+    </button>
+  </div>
+</div>
 
     {showContactInfo && (
       <ContactInfo

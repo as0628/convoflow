@@ -184,6 +184,26 @@ export const connectSocket = (
         );
       }
     }
+    // yguuuuuuuuuuuu
+    /* ================= ONLINE / OFFLINE ================= */
+if (data.type === "user-online") {
+  window.dispatchEvent(
+    new CustomEvent("user-online", {
+      detail: data.userId,
+    })
+  );
+}
+
+if (data.type === "user-offline") {
+  window.dispatchEvent(
+    new CustomEvent("user-offline", {
+      detail: {
+        userId: data.userId,
+        lastSeen: data.lastSeen,
+      },
+    })
+  );
+}
 
     /* ================= STATUS ================= */
     if (data.type === "status-update") {

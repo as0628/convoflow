@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 import "../css/profile.css";
 
 const ProfilePanel = ({ onClose }) => {
@@ -13,35 +14,47 @@ const ProfilePanel = ({ onClose }) => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const res = await axios.get(
-        "http://localhost:5000/api/users/me",
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      try {
+        const res = await axios.get(
+          "http://localhost:5000/api/users/me",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
 
-      setUser(res.data);
-      setName(res.data.name);
-      setBio(res.data.bio || "");
+        setUser(res.data);
+        setName(res.data.name);
+        setBio(res.data.bio || "");
+      } catch (error) {
+        toast.error("Unable to load profile");
+      }
     };
 
     fetchUser();
   }, [token]);
 
   const handleUpdate = async () => {
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("bio", bio);
-    if (profilePic) formData.append("profilePic", profilePic);
+    try {
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("bio", bio);
 
-    const res = await axios.put(
-      "http://localhost:5000/api/users/profile",
-      formData,
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
+      if (profilePic) {
+        formData.append("profilePic", profilePic);
+      }
 
-    setUser(res.data);
-    setEditMode(false);
-    setProfilePic(null);
-    alert("Profile updated successfully!");
+      const res = await axios.put(
+        "http://localhost:5000/api/users/profile",
+        formData,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      setUser(res.data);
+      setEditMode(false);
+      setProfilePic(null);
+
+      toast.success("Profile updated successfully!");
+    } catch (error) {
+      toast.error("Profile update failed");
+    }
   };
 
   if (!user) return null;
@@ -51,14 +64,12 @@ const ProfilePanel = ({ onClose }) => {
       <div className="profile-overlay" onClick={onClose}></div>
 
       <div className="profile-modal">
-
         <div className="profile-header">
           <h4>My Profile</h4>
           <button onClick={onClose}>✕</button>
         </div>
 
         <div className="profile-body">
-
           <div className="text-center mb-3">
             {user.profilePic && (
               <img
@@ -73,6 +84,7 @@ const ProfilePanel = ({ onClose }) => {
             <>
               <p><strong>Name:</strong> {user.name}</p>
               <p><strong>Email:</strong> {user.email}</p>
+              <p><strong>Username:</strong> {user.username}</p>
               <p><strong>Phone:</strong> {user.phone}</p>
               <p><strong>Bio:</strong> {user.bio || "No bio"}</p>
 
@@ -100,9 +112,7 @@ const ProfilePanel = ({ onClose }) => {
               <input
                 type="file"
                 className="form-control mb-3"
-                onChange={(e) =>
-                  setProfilePic(e.target.files[0])
-                }
+                onChange={(e) => setProfilePic(e.target.files[0])}
               />
 
               <button
@@ -120,7 +130,6 @@ const ProfilePanel = ({ onClose }) => {
               </button>
             </>
           )}
-
         </div>
       </div>
     </>

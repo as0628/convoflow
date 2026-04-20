@@ -13,27 +13,41 @@ const CreateGroupPanel = ({ onClose }) => {
 
   /* ================= SEARCH USERS ================= */
   const handleSearch = async (e) => {
-    const value = e.target.value;
-    setSearch(value);
+  const value = e.target.value;
+  setSearch(value);
 
-    if (!value) {
-      setUsers([]);
-      return;
-    }
+  if (!value) {
+    setUsers([]);
+    return;
+  }
 
-    try {
-      const res = await searchUsers(value);
-      setUsers(res.data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  try {
+    const res = await searchUsers(value);
 
+    // 🔥 Remove AI Assistant from group members list
+    const filteredUsers = res.data.filter(
+      (user) =>
+        user.name?.toLowerCase() !== "ai assistant"
+    );
+
+    setUsers(filteredUsers);
+  } catch (err) {
+    console.log(err);
+  }
+};
   /* ================= ADD USER ================= */
-  const handleAddUser = (user) => {
-    if (selectedUsers.find((u) => u._id === user._id)) return;
-    setSelectedUsers([...selectedUsers, user]);
-  };
+ const handleAddUser = (user) => {
+  // 🔥 Never allow AI Assistant in group
+  if (
+    user.name?.toLowerCase() === "ai assistant"
+  ) {
+    return;
+  }
+
+  if (selectedUsers.find((u) => u._id === user._id)) return;
+
+  setSelectedUsers([...selectedUsers, user]);
+};
 
   /* ================= REMOVE USER ================= */
   const handleRemoveUser = (userId) => {
@@ -68,7 +82,14 @@ const CreateGroupPanel = ({ onClose }) => {
         }
       );
 
-      alert("Group created successfully 🚀");
+      const toast = document.createElement("div");
+toast.className = "custom-toast";
+toast.innerText = "✅ Group created successfully";
+document.body.appendChild(toast);
+
+setTimeout(() => {
+  toast.remove();
+}, 2500);
       onClose(); // 👈 close panel instead of navigating
     } catch (err) {
       console.log(err);

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { searchUsers } from "../api/userApi";
 import { accessChat } from "../api/chatApi";
 import axios from "axios";
+import { decryptMessage } from "../utils/encryption";
 import "../css/sidebar.css";
 
 const Sidebar = ({
@@ -360,10 +361,51 @@ const Sidebar = ({
         <h5 className="app-title">ConvoFlow</h5>
 
         <div className="sidebar-icons">
-          <button className="icon-btn" onClick={() => setShowCreateGroup(true)}>+</button>
+  {/* + Button */}
+  <button
+    className="icon-btn"
+    onClick={() => setShowCreateGroup(true)}
+  >
+    +
+  </button>
 
-          <div className="menu-wrapper">
-            <button className="icon-btn" onClick={() => setShowMenu(!showMenu)}>⋮</button>
+  {/* AI Button */}
+ <button
+  className="icon-btn"
+  onClick={async () => {
+    try {
+      let aiChat = chats.find((chat) =>
+        chat.users?.some(
+          (u) =>
+            u._id !== loggedInUserId &&
+            u.name?.toLowerCase() === "ai assistant"
+        )
+      );
+
+      if (!aiChat) {
+        const AI_USER_ID = "699c366e26d4d42d1f784eb2";
+
+        const chatRes = await accessChat(AI_USER_ID);
+        aiChat = chatRes.data;
+      }
+
+      handleChatClick(aiChat);
+    } catch (err) {
+      console.log(err);
+    }
+  }}
+>
+  AI
+</button>
+
+  {/* Three Dot Menu */}
+  <div className="menu-wrapper">
+    <button
+      className="icon-btn"
+      onClick={() => setShowMenu(!showMenu)}
+    >
+      ⋮
+    </button>
 
             {showMenu && (
               <div className="dropdown-menu-custom">
@@ -442,19 +484,26 @@ const Sidebar = ({
         key={chat._id}
         onClick={() => handleChatClick(chat)}
         className="sidebar-item"
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
       >
-        <div>
-          <div style={{ fontWeight: "bold" }}>
-            {otherUser.name || otherUser.username}
-          </div>
+        <div className="sidebar-left">
+          <img
+            src={otherUser.profilePic || "/default-avatar.png"}
+            alt=""
+            className="sidebar-avatar"
+          />
 
-          <div style={{ fontSize: "12px", opacity: 0.7 }}>
-            {chat.latestMessage?.content || "No messages"}
+          <div className="sidebar-text">
+            <div className="sidebar-name">
+              {otherUser.name || otherUser.username}
+            </div>
+
+            <div className="sidebar-msg">
+  {chat.latestMessage?.mediaUrl
+    ? "📎 Attachment"
+    : chat.latestMessage?.content
+    ? decryptMessage(chat.latestMessage.content)
+    : "No messages"}
+</div>
           </div>
         </div>
 
@@ -484,33 +533,37 @@ const Sidebar = ({
           {groups.map((group) => {
   const latest = group.latestMessage;
 
-  const previewText =
-    latest?.content ||
-    (latest?.mediaUrl ? "Media" : null);
+  const previewText = latest?.mediaUrl
+  ? "📎 Attachment"
+  : latest?.content
+  ? decryptMessage(latest.content)
+  : "No messages";
 
-  const senderName =
-    latest?.sender?.name || "";
+  const senderName = latest?.sender?.name || "";
 
   return (
     <div
       key={group._id}
       onClick={() => handleGroupClick(group)}
       className="sidebar-item"
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-      }}
     >
-      <div>
-        <div style={{ fontWeight: "bold" }}>
-          👥 {group.name}
-        </div>
+      <div className="sidebar-left">
+        <img
+          src={group.groupPic || "/group-default.png"}
+          alt=""
+          className="sidebar-avatar"
+        />
 
-        <div style={{ fontSize: "12px", opacity: 0.7 }}>
-          {previewText
-            ? `${senderName ? senderName + ": " : ""}${previewText}`
-            : "No messages"}
+        <div className="sidebar-text">
+          <div className="sidebar-name">
+            {group.name}
+          </div>
+
+          <div className="sidebar-msg">
+            {senderName
+              ? `${senderName}: ${previewText}`
+              : previewText}
+          </div>
         </div>
       </div>
 

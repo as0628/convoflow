@@ -1,6 +1,28 @@
 const Message = require("../models/Message");
 const Chat = require("../models/Chat");
 const User = require("../models/User");
+const CryptoJS = require("crypto-js");
+
+const SECRET_KEY = "convoflow_secret_key";
+
+const decryptMessage = (text) => {
+  if (!text) return "";
+
+  try {
+    const bytes = CryptoJS.AES.decrypt(
+      text,
+      SECRET_KEY
+    );
+
+    const result = bytes.toString(
+      CryptoJS.enc.Utf8
+    );
+
+    return result || text;
+  } catch (error) {
+    return text;
+  }
+};
 
 
 // ==============================
@@ -119,11 +141,13 @@ await Chat.findByIdAndUpdate(chatId, {
           "You are a friendly AI assistant inside a chat app. Keep replies short and natural.\n\n";
 
         previousMessages.reverse().forEach((msg) => {
-          if (msg.sender._id.toString() === AI_USER_ID) {
-            conversationText += `AI: ${msg.content}\n`;
-          } else {
-            conversationText += `User: ${msg.content}\n`;
-          }
+          const readableText = decryptMessage(msg.content);
+
+if (msg.sender._id.toString() === AI_USER_ID) {
+  conversationText += `AI: ${readableText}\n`;
+} else {
+  conversationText += `User: ${readableText}\n`;
+}
         });
 
         let aiReply = "AI temporarily unavailable.";

@@ -37,22 +37,43 @@ const setupSocket = (server, app) => {
             if (ws.userId) {
               const user = await User.findById(ws.userId).select("name");
               ws.userName = user?.name || "Unknown";
+// mark self online
+await User.findByIdAndUpdate(ws.userId, {
+  isOnline: true,
+  lastSeen: null,
+});
 
-              await User.findByIdAndUpdate(ws.userId, {
-                isOnline: true,
-                lastSeen: null,
-              });
+// get blocked relations
+const me = await User.findById(ws.userId).select("blockedUsers");
 
-              wss.clients.forEach((client) => {
-                if (client.readyState === WebSocket.OPEN) {
-                  client.send(
-                    JSON.stringify({
-                      type: "user-online",
-                      userId: ws.userId,
-                    })
-                  );
-                }
-              });
+wss.clients.forEach(async (client) => {
+  if (
+    client.readyState === WebSocket.OPEN &&
+    client.userId &&
+    client.userId !== ws.userId
+  ) {
+    const otherUser = await User.findById(client.userId).select(
+      "blockedUsers"
+    );
+
+    const blocked =
+      me.blockedUsers.some(
+        (id) => id.toString() === client.userId
+      ) ||
+      otherUser.blockedUsers.some(
+        (id) => id.toString() === ws.userId
+      );
+
+    if (!blocked) {
+      client.send(
+        JSON.stringify({
+          type: "user-online",
+          userId: ws.userId,
+        })
+      );
+    }
+  }
+});
             }
           } catch (err) {
             console.log("❌ Invalid token");
@@ -250,55 +271,76 @@ if (data.type === "group-seen") {
       }
     });
 
-    ws.on("close", async () => {
-      console.log("🔴 Client disconnected");
+   ws.on("close", async () => {
+  console.log("🔴 Client disconnected");
 
-      if (ws.userId) {
-        const lastSeenTime = new Date();
+  if (ws.userId) {
+    const lastSeenTime = new Date();
 
-        await User.findByIdAndUpdate(ws.userId, {
-          isOnline: false,
-          lastSeen: lastSeenTime,
-        });
+    await User.findByIdAndUpdate(ws.userId, {
+      isOnline: false,
+      lastSeen: lastSeenTime,
+    });
 
-        wss.clients.forEach((client) => {
+    const me = await User.findById(ws.userId).select("blockedUsers");
+
+    wss.clients.forEach(async (client) => {
+      if (
+        client.readyState === WebSocket.OPEN &&
+        client.userId &&
+        client.userId !== ws.userId
+      ) {
+        const otherUser = await User.findById(client.userId).select(
+          "blockedUsers"
+        );
+
+        const blocked =
+          me.blockedUsers.some(
+            (id) => id.toString() === client.userId
+          ) ||
+          otherUser.blockedUsers.some(
+            (id) => id.toString() === ws.userId
+          );
+
+        if (!blocked) {
+          client.send(
+            JSON.stringify({
+              type: "user-offline",
+              userId: ws.userId,
+              lastSeen: lastSeenTime,
+            })
+          );
+        }
+      }
+    });
+
+    /* ✅ AUTO STOP GROUP TYPING ON DISCONNECT */
+    if (ws.currentRoom && ws.roomType === "group") {
+      const room = rooms.get(ws.currentRoom);
+
+      if (room) {
+        room.forEach((client) => {
           if (client.readyState === WebSocket.OPEN) {
             client.send(
               JSON.stringify({
-                type: "user-offline",
+                type: "group-stop-typing",
                 userId: ws.userId,
-                lastSeen: lastSeenTime,
               })
             );
           }
         });
-
-        // ✅ AUTO STOP GROUP TYPING ON DISCONNECT
-        if (ws.currentRoom && ws.roomType === "group") {
-          const room = rooms.get(ws.currentRoom);
-          if (room) {
-            room.forEach((client) => {
-              if (client.readyState === WebSocket.OPEN) {
-                client.send(
-                  JSON.stringify({
-                    type: "group-stop-typing",
-                    userId: ws.userId,
-                  })
-                );
-              }
-            });
-          }
-        }
       }
+    }
+  }
 
-      if (ws.currentRoom && rooms.has(ws.currentRoom)) {
-        rooms.get(ws.currentRoom).delete(ws);
+  if (ws.currentRoom && rooms.has(ws.currentRoom)) {
+    rooms.get(ws.currentRoom).delete(ws);
 
-        if (rooms.get(ws.currentRoom).size === 0) {
-          rooms.delete(ws.currentRoom);
-        }
-      }
-    });
+    if (rooms.get(ws.currentRoom).size === 0) {
+      rooms.delete(ws.currentRoom);
+    }
+  }
+});
   });
 };
 

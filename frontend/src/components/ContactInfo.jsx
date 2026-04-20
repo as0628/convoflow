@@ -8,9 +8,18 @@ const ContactInfo = ({ user, messages, onClose }) => {
   const [previewIndex, setPreviewIndex] = useState(null);
   const [zoom, setZoom] = useState(1);
   const [visibleCount, setVisibleCount] = useState(12);
+  const [isBlocked, setIsBlocked] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const touchStartX = useRef(null);
 
   /* ================= ESC CLOSE ================= */
+  useEffect(() => {
+  const blockedUsers =
+    JSON.parse(localStorage.getItem("blockedUsers")) || [];
+
+  setIsBlocked(blockedUsers.includes(user?._id));
+}, [user]);
+
   useEffect(() => {
     const handleEsc = (e) => {
       if (e.key === "Escape") {
@@ -98,25 +107,55 @@ const ContactInfo = ({ user, messages, onClose }) => {
 
   /* ================= BLOCK USER ================= */
 
-  const handleBlock = async () => {
-    try {
+  const handleBlockToggle = async () => {
+  try {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    };
+
+    let blockedUsers =
+      JSON.parse(localStorage.getItem("blockedUsers")) || [];
+
+    if (!isBlocked) {
       await axios.post(
         "http://localhost:5000/api/users/block",
         { userIdToBlock: user._id },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
+        config
       );
-      alert("User blocked successfully");
-      onClose();
-    } catch (err) {
-      console.error(err);
-      alert("Error blocking user");
-    }
-  };
 
+      setIsBlocked(true);
+
+      if (!blockedUsers.includes(user._id)) {
+        blockedUsers.push(user._id);
+      }
+    } else {
+      await axios.post(
+        "http://localhost:5000/api/users/unblock",
+        { userIdToUnblock: user._id },
+        config
+      );
+
+      setIsBlocked(false);
+
+      blockedUsers = blockedUsers.filter(
+        (id) => id !== user._id
+      );
+    }
+
+    localStorage.setItem(
+      "blockedUsers",
+      JSON.stringify(blockedUsers)
+    );
+
+    setShowConfirm(false);
+  } catch (err) {
+    console.log(err.response?.data || err.message);
+
+    setShowConfirm(false);
+  }
+};
  return createPortal(
   <>
     {/* OVERLAY */}
@@ -233,10 +272,13 @@ const ContactInfo = ({ user, messages, onClose }) => {
 
       {/* BLOCK BUTTON */}
       <div style={{ marginTop: "20px", textAlign: "center" }}>
-        <button className="block-btn" onClick={handleBlock}>
-          🚫 Block {user.name}
-        </button>
-      </div>
+  <button
+    className={`block-btn ${isBlocked ? "unblock-btn" : ""}`}
+    onClick={() => setShowConfirm(true)}
+  >
+    {isBlocked ? `✅ Unblock ${user.name}` : `🚫 Block ${user.name}`}
+  </button>
+</div>
     </div>
 
     {/* PREVIEW MODAL */}
@@ -341,6 +383,33 @@ const ContactInfo = ({ user, messages, onClose }) => {
         </div>
       </div>
     )}
+    {showConfirm && (
+  <div className="confirm-overlay">
+    <div className="confirm-box">
+      <h5>
+        {isBlocked
+          ? "Unblock this user?"
+          : "Are you sure you want to block this user?"}
+      </h5>
+
+      <div className="confirm-actions">
+        <button
+          className="btn btn-secondary btn-sm"
+          onClick={() => setShowConfirm(false)}
+        >
+          Cancel
+        </button>
+
+        <button
+          className="btn btn-danger btn-sm"
+          onClick={handleBlockToggle}
+        >
+          Yes
+        </button>
+      </div>
+    </div>
+  </div>
+)}
   </>,
   document.body
 );

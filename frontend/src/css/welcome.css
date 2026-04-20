@@ -1,6 +1,7 @@
 /* ================= MAIN ================= */
 .welcome {
   height: 100%;
+  min-height: 250px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -12,44 +13,74 @@
 
 /* ================= HEADING ================= */
 .welcome h2 {
+  margin: 0 0 15px;
   font-size: 28px;
   font-weight: 600;
-  margin-bottom: 15px;
+  line-height: 1.25;
+  max-width: 100%;
+  word-break: break-word;
+
+  background: linear-gradient(to right, #ff8c42, #ff6a00);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 /* ================= TEXT ================= */
 .welcome p {
+  margin: 0;
   font-size: 15px;
   opacity: 0.8;
   max-width: 400px;
+  width: 100%;
   line-height: 1.6;
+  word-break: break-word;
 }
 
 /* ================= RESPONSIVE ================= */
 
 /* TABLET */
 @media (max-width: 768px) {
+  .welcome {
+    padding: 18px;
+    min-height: 220px;
+  }
+
   .welcome h2 {
     font-size: 24px;
   }
 
   .welcome p {
     font-size: 14px;
+    max-width: 360px;
   }
 }
 
 /* MOBILE */
 @media (max-width: 480px) {
+  .welcome {
+    padding: 16px;
+    min-height: 200px;
+  }
+
   .welcome h2 {
     font-size: 20px;
+    margin-bottom: 12px;
   }
 
   .welcome p {
     font-size: 13px;
+    max-width: 100%;
   }
 }
-.welcome h2 {
-  background: linear-gradient(to right, #ff8c42, #ff6a00);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+
+/* EXTRA SMALL */
+@media (max-width: 360px) {
+  .welcome h2 {
+    font-size: 18px;
+  }
+
+  .welcome p {
+    font-size: 12px;
+  }
 }

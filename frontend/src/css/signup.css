@@ -1,57 +1,118 @@
 /* ================= BACKGROUND ================= */
 .gradient-custom {
+  min-height: 100vh;
   background: linear-gradient(
     to bottom right,
     rgba(252, 203, 144, 1),
     rgba(213, 126, 235, 1)
   );
+  overflow-x: hidden;
 }
 
 /* ================= GLASS CONTAINER ================= */
 .mask-custom {
   background: rgba(24, 24, 16, 0.2);
   backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
   border: 2px solid rgba(255, 255, 255, 0.05);
   box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
+  min-height: 100%;
+  overflow: hidden;
 }
 
 /* ================= HEADER ================= */
 .mask-custom .d-flex.justify-content-between {
   color: white;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 /* ================= FORM BOX ================= */
 .glass-login {
-  width: 380px;
-  padding: 25px;
+  width: 520px;
+  max-width: 95%;
+  padding: 28px;
   border-radius: 20px;
-  background: rgba(255,255,255,0.08);
+  background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(10px);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
   max-height: 85vh;
   overflow-y: auto;
 }
 
+/* TITLES */
+.glass-login h3 {
+  margin-bottom: 20px;
+  font-size: 28px;
+  line-height: 1.2;
+}
+
 /* ================= INPUT ================= */
 .glass-input {
+  width: 100%;
   border-radius: 10px;
   border: none;
+  outline: none;
   font-size: 14px;
+  padding: 10px 12px;
+  min-height: 42px;
+  box-sizing: border-box;
 }
 
 /* ================= BUTTON ================= */
 .glass-btn {
+  width: 100%;
+  border: none;
   border-radius: 20px;
   font-size: 14px;
-  padding: 8px;
-  transition: 0.2s;
+  padding: 10px;
+  min-height: 42px;
+  transition: 0.2s ease;
+  cursor: pointer;
 }
 
 .glass-btn:hover {
   transform: translateY(-1px);
+}
+
+/* ================= TWO COLUMN FORM ================= */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+/* ================= MESSAGES ================= */
+.field-error {
+  color: #ffb3b3;
+  font-size: 12px;
+  display: block;
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+.error-box,
+.success-box {
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  font-size: 14px;
+  text-align: center;
+  word-break: break-word;
+}
+
+.error-box {
+  background: rgba(255, 0, 0, 0.15);
+  color: white;
+}
+
+.success-box {
+  background: rgba(0, 255, 120, 0.15);
+  color: white;
 }
 
 /* ================= SCROLL ================= */
@@ -60,49 +121,61 @@
 }
 
 .glass-login::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.2);
+  background: rgba(255, 255, 255, 0.2);
   border-radius: 10px;
 }
 
-/* ================= RESPONSIVE ================= */
-
-/* TABLET */
+/* ================= TABLET ================= */
 @media (max-width: 768px) {
-
   .glass-login {
-    width: 320px;
-    padding: 20px;
+    width: 430px;
+    max-width: 92%;
+    padding: 22px;
   }
 
   .glass-login h3 {
-    font-size: 22px;
+    font-size: 24px;
   }
 
   .glass-input {
     font-size: 13px;
-    padding: 8px;
+    padding: 9px 10px;
+    min-height: 40px;
+  }
+
+  .glass-btn {
+    font-size: 13px;
+    min-height: 40px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
   }
 }
 
-/* MOBILE */
+/* ================= MOBILE ================= */
 @media (max-width: 480px) {
-
   .gradient-custom {
     padding: 0 !important;
   }
 
   .mask-custom {
     border-radius: 0 !important;
+    border-left: none;
+    border-right: none;
   }
 
   .glass-login {
-    width: 92%;
+    width: 95%;
     padding: 18px;
     max-height: 90vh;
+    border-radius: 16px;
   }
 
   .glass-login h3 {
     font-size: 20px;
+    margin-bottom: 16px;
   }
 
   .glass-input {
@@ -111,20 +184,53 @@
 
   .glass-btn {
     font-size: 13px;
-    padding: 7px;
+    padding: 8px;
+    min-height: 38px;
   }
 
-  /* HEADER FIX */
   .d-flex.justify-content-between {
     padding: 10px 12px !important;
+    justify-content: center !important;
+    text-align: center;
   }
 
   .d-flex.justify-content-between h5 {
+    width: 100%;
     font-size: 14px;
+    margin: 0;
   }
 
   .btn-danger {
     font-size: 11px;
     padding: 4px 8px;
+    min-height: 30px;
+  }
+
+  .error-box,
+  .success-box {
+    font-size: 13px;
+    padding: 9px;
+  }
+}
+
+/* ================= EXTRA SMALL ================= */
+@media (max-width: 360px) {
+  .glass-login {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 0;
+    padding: 16px;
+  }
+
+  .glass-login h3 {
+    font-size: 18px;
+  }
+
+  .glass-btn {
+    font-size: 12px;
+  }
+
+  .field-error {
+    font-size: 11px;
   }
 }

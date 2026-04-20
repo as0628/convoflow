@@ -1,135 +1,74 @@
-import React from "react";
+
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 import "../css/guest.css";
-const GuestHome = () => {
+
+export default function GuestHome() {
   const navigate = useNavigate();
+
   useEffect(() => {
-  const elements = document.querySelectorAll(".reveal");
-
-  const observer = new IntersectionObserver(
-    (entries) => {
+    const items = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("active");
-        }
+        if (entry.isIntersecting) entry.target.classList.add('active');
       });
-    },
-    { threshold: 0.2 }
-  );
+    }, { threshold: 0.15 });
+    items.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
 
-  elements.forEach((el) => observer.observe(el));
-}, []);
+  const cards = [
+    { title: 'Real-time Chat', text: 'Instant messaging with fast live conversations.' },
+    { title: 'Group Chats', text: 'Create groups and stay connected with everyone.' },
+    { title: 'Media Sharing', text: 'Send images, videos, files and documents easily.' },
+    { title: 'AI Assistant', text: 'Talk to AI for quick help and smart replies.' },
+  ];
 
   return (
     <div className="guest-container">
-
-      {/* ===== NAVBAR ===== */}
       <nav className="guest-navbar">
-        <h4>ConvoFlow</h4>
-
-        <div>
-          <button onClick={() => navigate("/login")}>
-            Login
-          </button>
-
-          <button
-            className="signup-btn"
-            onClick={() => navigate("/signup")}
-          >
-            Signup
-          </button>
+        <h3>ConvoFlow</h3>
+        <div className="nav-actions">
+          <button className="ghost-btn" onClick={() => navigate('/login')}>Login</button>
+          <button className="primary-btn" onClick={() => navigate('/signup')}>Create Account</button>
         </div>
       </nav>
 
-      {/* ===== HERO SECTION ===== */}
-      
-
-       {/* ===== HERO SECTION ===== */}
-
-<section className="hero-section">
-
-  {/* LEFT TEXT */}
-  <div className="hero-text">
-    <h1>Welcome to ConvoFlow 💬</h1>
-
-    <p>
-      Send and receive messages without keeping your phone online.
-      <br />
-      Build conversations. Stay connected.
-    </p>
-
-    <button
-      className="signup-btn"
-      onClick={() => navigate("/signup")}
-    >
-      Get Started
-    </button>
-  </div>
-
-  {/* RIGHT IMAGE */}
-  <div className="hero-image">
-    <img
-      src="https://res.cloudinary.com/dfnfls3kp/image/upload/v1772723854/fttrttttttttttttttt_z9f3ci.jpg"
-      alt="chat preview"
-    />
-  </div>
-
-</section>
-
-      {/* ===== SERVICES ===== */}
-      <section className="services-section reveal">
-        <h2>At Your Service</h2>
-
-        <div className="services-grid">
-
-          <div className="service-card">
-            💬
-            <h5>Real-time Chat</h5>
-            <p>Instant messaging with WebSocket support.</p>
+      <section className="hero-section reveal">
+        <div className="hero-text">
+          <span className="badge">Modern Messaging Platform</span>
+          <h1>Chat Smarter with ConvoFlow 💬</h1>
+          <p>
+            Real-time conversations, group chats, media sharing and AI support —
+            everything you need in one beautiful chat app.
+          </p>
+          <div className="hero-actions">
+            <button className="primary-btn" onClick={() => navigate('/signup')}>Start Chatting</button>
+            {/* <button className="ghost-btn" onClick={() => navigate('/login')}>Login</button> */}
           </div>
-
-          <div className="service-card">
-            👥
-            <h5>Group Conversations</h5>
-            <p>Create and manage unlimited chat groups.</p>
-          </div>
-
-          <div className="service-card">
-            📎
-            <h5>Media Sharing</h5>
-            <p>Send images, videos, and documents easily.</p>
-          </div>
-
-          <div className="service-card">
-            🔒
-            <h5>Secure & Private</h5>
-            <p>JWT authentication with protected routes.</p>
-          </div>
-
+        </div>
+        <div className="hero-image">
+          <img src="https://res.cloudinary.com/dfnfls3kp/image/upload/v1772723854/fttrttttttttttttttt_z9f3ci.jpg" alt="ConvoFlow" />
         </div>
       </section>
 
-      {/* ===== APP PREVIEW ===== */}
-     <section className="portfolio-section reveal">
-
-        <h2>App Preview</h2>
-
-        <div className="portfolio-grid">
-
-          <div className="portfolio-item"></div>
-          <div className="portfolio-item"></div>
-          <div className="portfolio-item"></div>
-          <div className="portfolio-item"></div>
-          <div className="portfolio-item"></div>
-          <div className="portfolio-item"></div>
-
+      <section className="features-section reveal">
+        <h2>Everything You Need</h2>
+        <div className="features-grid">
+          {cards.map((card, i) => (
+            <div className="feature-card" key={i}>
+              <h4>{card.title}</h4>
+              <p>{card.text}</p>
+            </div>
+          ))}
         </div>
-
       </section>
 
+      <section className="cta-section reveal">
+        <h2>Start Your Conversations Today</h2>
+        <p>Secure, fast and designed for modern communication.</p>
+        <button className="primary-btn" onClick={() => navigate('/signup')}>Join ConvoFlow</button>
+      </section>
     </div>
   );
-};
-
-export default GuestHome;
+}
