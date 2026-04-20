@@ -417,6 +417,12 @@ const Sidebar = ({
                 }} className="logout-item">
                   Logout
                 </div>
+                <button
+              className="btn btn-outline-dark btn-sm me-2"
+              onClick={() => navigate("/profile")}
+            >
+              Profile
+            </button>
               </div>
             )}
           </div>
