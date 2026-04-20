@@ -399,33 +399,52 @@ const Sidebar = ({
 </button>
 
   {/* Three Dot Menu */}
-  <div className="menu-wrapper">
-    <button
-      className="icon-btn"
-      onClick={() => setShowMenu(!showMenu)}
-    >
-      ⋮
-    </button>
+ {/* Three Dot Menu */}
+<div className="menu-wrapper">
+  <button
+    className="icon-btn"
+    onClick={() => setShowMenu(!showMenu)}
+  >
+    ⋮
+  </button>
 
-            {showMenu && (
-              <div className="dropdown-menu-custom">
-                <div onClick={() => setShowBlockedUsers(true)}>Blocked Users</div>
+  {showMenu && (
+    <div className="dropdown-menu-custom">
 
-                <div onClick={() => {
-                  localStorage.removeItem("token");
-                  navigate("/");
-                }} className="logout-item">
-                  Logout
-                </div>
-                <button
-              className="btn btn-outline-dark btn-sm me-2"
-              onClick={() => navigate("/profile")}
-            >
-              Profile
-            </button>
-              </div>
-            )}
-          </div>
+      {/* Profile */}
+      <div
+        onClick={() => {
+          navigate("/profile");
+          setShowMenu(false);
+        }}
+      >
+        Profile
+      </div>
+
+      {/* Blocked Users */}
+      <div
+        onClick={() => {
+          setShowBlockedUsers(true);
+          setShowMenu(false);
+        }}
+      >
+        Blocked Users
+      </div>
+
+      {/* Logout */}
+      <div
+        className="logout-item"
+        onClick={() => {
+          localStorage.removeItem("token");
+          navigate("/");
+        }}
+      >
+        Logout
+      </div>
+
+    </div>
+  )}
+</div>
         </div>
       </div>
 
