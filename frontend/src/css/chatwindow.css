@@ -332,3 +332,46 @@
     font-size: 11px;
   }
 }
+
+/* ================= MOBILE HEADER FIX ONLY ================= */
+@media (max-width: 480px) {
+  .chat-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 8px 10px !important;
+    gap: 8px;
+  }
+
+  .chat-header > div:first-child {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .chat-header > div:first-child img {
+    width: 38px !important;
+    height: 38px !important;
+    margin-right: 8px !important;
+    flex-shrink: 0;
+  }
+
+  .chat-header h5 {
+    font-size: 14px !important;
+    margin: 0 !important;
+    text-align: left !important;
+  }
+
+  .chat-header small {
+    font-size: 11px !important;
+    text-align: left !important;
+    display: block;
+  }
+
+  .chat-header > div:last-child {
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+}
