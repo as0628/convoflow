@@ -418,3 +418,50 @@
     font-size: 11px;
   }
 }
+/* ===== MOBILE HEADER FIX ONLY ===== */
+@media (max-width: 480px) {
+  .group-chat-window > div:first-child {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 10px !important;
+    gap: 8px;
+  }
+
+  .group-chat-window > div:first-child > div:first-child {
+    display: flex !important;
+    align-items: center !important;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .group-chat-window > div:first-child img {
+    width: 38px !important;
+    height: 38px !important;
+    margin-right: 8px !important;
+    flex-shrink: 0;
+  }
+
+  .group-chat-window > div:first-child h5 {
+    font-size: 14px !important;
+    margin: 0 !important;
+    text-align: left !important;
+  }
+
+  .group-chat-window > div:first-child small {
+    font-size: 11px !important;
+    text-align: left !important;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .group-chat-window > div:first-child > div:last-child {
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+}
+.group-header {
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+}
