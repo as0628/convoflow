@@ -10,7 +10,8 @@ const Sidebar = ({
   setSelectedChat,
   setSelectedGroup,
   setShowCreateGroup,
-  setShowBlockedUsers 
+  setShowBlockedUsers,
+  setShowProfile
 }) => {
   const [search, setSearch] = useState("");
   const [users, setUsers] = useState([]);
@@ -412,13 +413,13 @@ const Sidebar = ({
   <div className="dropdown-menu-custom">
 
     <div
-      onClick={() => {
-        navigate("/profile");
-        setShowMenu(false);
-      }}
-    >
-      Profile
-    </div>
+  onClick={() => {
+    setShowProfile(true);
+    setShowMenu(false);
+  }}
+>
+  Profile
+</div>
 
 
       {/* Blocked Users */}

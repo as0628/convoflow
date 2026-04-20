@@ -82,6 +82,7 @@ const Home = () => {
       setSelectedGroup={setSelectedGroup}
       setShowCreateGroup={setShowCreateGroup}
       setShowBlockedUsers={setShowBlockedUsers}
+      setShowProfile={setShowProfile}
     />
   </div>
 
@@ -114,6 +115,7 @@ const Home = () => {
 {showProfile && (
   <ProfilePanel onClose={() => setShowProfile(false)} />
 )}
+
 {showBlockedUsers && (
   <BlockedUsersPanel
     onClose={() => setShowBlockedUsers(false)}
