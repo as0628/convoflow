@@ -11,6 +11,8 @@ import {
 } from "../socket";
 import { encryptMessage, decryptMessage,} from "../utils/encryption";
 import "../css/groupchatwindow.css";
+import { useNavigate } from "react-router-dom";
+
 
 const GroupChatWindow = ({ group }) => {
   const [messages, setMessages] = useState([]);
@@ -28,6 +30,11 @@ const GroupChatWindow = ({ group }) => {
   const hasConnectedRef = useRef(false);
 
   const token = localStorage.getItem("token");
+ 
+
+const navigate = useNavigate();
+
+
 
   /* ================= SAFE TOKEN DECODE ================= */
   let loggedInUserId = null;
@@ -39,6 +46,19 @@ const GroupChatWindow = ({ group }) => {
       console.error("Invalid token");
     }
   }
+
+  useEffect(() => {
+  const handleBack = (e) => {
+    e.preventDefault();
+    navigate("/home"); // 👈 force go home
+  };
+
+  window.addEventListener("popstate", handleBack);
+
+  return () => {
+    window.removeEventListener("popstate", handleBack);
+  };
+}, []);
   // tuuuuuuy
   useEffect(() => {
   if (!group?._id || !token) return;

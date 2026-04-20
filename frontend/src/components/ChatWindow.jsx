@@ -10,6 +10,8 @@ import {
 import ContactInfo from "./ContactInfo";
 import { encryptMessage, decryptMessage,} from "../utils/encryption";
 import "../css/chatwindow.css";
+import { useNavigate } from "react-router-dom";
+
 
 const ChatWindow = ({ chat }) => {
   const [messages, setMessages] = useState([]);
@@ -22,11 +24,13 @@ const ChatWindow = ({ chat }) => {
   const [showMenu, setShowMenu] = useState(false);
   const [activeMessage, setActiveMessage] = useState(null);
   const [isBlocked, setIsBlocked] = useState(false);
+  
 
   const chatEndRef = useRef(null);
   const typingTimeoutRef = useRef(null);
 
   const token = localStorage.getItem("token");
+  const navigate = useNavigate();
 
   /* ================= SAFE TOKEN DECODE ================= */
   let loggedInUserId = null;
@@ -38,6 +42,18 @@ const ChatWindow = ({ chat }) => {
       console.error("Invalid token");
     }
   }
+  useEffect(() => {
+  const handleBack = (e) => {
+    e.preventDefault();
+    navigate("/home"); // 👈 force go home
+  };
+
+  window.addEventListener("popstate", handleBack);
+
+  return () => {
+    window.removeEventListener("popstate", handleBack);
+  };
+}, []);
 
  useEffect(() => {
   const handleDelete = (event) => {
@@ -420,8 +436,11 @@ return (
     <div
       className="chat-header d-flex align-items-center justify-content-between mb-3"
       style={{ position: "relative" }}
+
     >
+      
       <div className="d-flex align-items-center">
+        
         <img
           src={otherUser?.profilePic}
           alt="profile"
