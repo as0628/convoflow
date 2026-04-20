@@ -65,7 +65,7 @@ const Sidebar = ({
   return () => {
     window.removeEventListener("chat-deleted", handleDelete);
   };
-}, []);
+}, [loggedInUserId]);
 
   /* ================= LOAD CHATS ================= */
   useEffect(() => {
@@ -171,7 +171,7 @@ const Sidebar = ({
     return () => {
       window.removeEventListener("chat-updated", handleChatUpdate);
     };
-  }, []);
+  }, [loggedInUserId]);
   // jhhhhhhhhhhhhh
   useEffect(() => {
   const handleGroupUpdate = (e) => {
@@ -235,7 +235,7 @@ const Sidebar = ({
     window.removeEventListener("group-updated", handleGroupUpdate);
     window.removeEventListener("group-read", handleGroupRead);
   };
-}, []);
+}, [loggedInUserId]);
 
   /* ================= SEARCH ================= */
   const handleSearch = async (e) => {
@@ -488,7 +488,7 @@ const Sidebar = ({
         <div className="sidebar-left">
           <img
             src={otherUser.profilePic || "/default-avatar.png"}
-            alt=""
+            alt="User profile"
             className="sidebar-avatar"
           />
 
@@ -550,7 +550,7 @@ const Sidebar = ({
       <div className="sidebar-left">
         <img
           src={group.groupPic || "/group-default.png"}
-          alt=""
+          alt="Group profile"
           className="sidebar-avatar"
         />
 
