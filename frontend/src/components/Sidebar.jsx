@@ -409,17 +409,17 @@ const Sidebar = ({
   </button>
 
   {showMenu && (
-    <div className="dropdown-menu-custom">
+  <div className="dropdown-menu-custom">
 
-      {/* Profile */}
-      <div
-  onClick={() => {
-    navigate("/profile");
-    setShowMenu(false);
-  }}
->
-  Profile
-</div>
+    <div
+      onClick={() => {
+        navigate("/profile");
+        setShowMenu(false);
+      }}
+    >
+      Profile
+    </div>
+
 
       {/* Blocked Users */}
       <div
