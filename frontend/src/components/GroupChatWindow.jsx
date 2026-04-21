@@ -368,16 +368,17 @@ const getDateLabel = (dateString) => {
 };
   /* ================= UI ================= */
   return (
-  <div
-    className="group-chat-window d-flex flex-column"
-    style={{
-      height: "100%",
-      color: "white",
-    }}
-  >
+  // <div
+  //   className="group-chat-window d-flex flex-column"
+  //   style={{
+  //     height: "100%",
+  //     color: "white",
+  //   }}
+  // >
+  <div className="group-chat-window">
     {/* ===== HEADER ===== */}
     <div
-      className="d-flex align-items-center justify-content-between px-3 py-3"
+    className="group-header"
       style={{
         borderBottom: "1px solid rgba(255,255,255,0.08)",
       }}
@@ -455,13 +456,7 @@ const getDateLabel = (dateString) => {
     </div>
 
     {/* ===== CHAT BODY ===== */}
-    <div
-      style={{
-        flex: 1,
-        overflowY: "auto",
-        padding: "15px",
-      }}
-    >
+    <div className="group-chat-body">
       {(() => {
         let lastDate = null;
 
@@ -689,13 +684,7 @@ const getDateLabel = (dateString) => {
     </div>
 
     {/* ===== INPUT ===== */}
-    <div
-      className="d-flex align-items-center p-3"
-      style={{
-        borderTop: "1px solid rgba(255,255,255,0.08)",
-        gap: "10px",
-      }}
-    >
+    <div className="group-chat-input">
       <input
         type="file"
         ref={fileInputRef}
