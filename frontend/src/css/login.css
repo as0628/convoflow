@@ -164,22 +164,28 @@
   }
 
   .d-flex.justify-content-between {
-    padding: 10px 12px !important;
-    justify-content: center !important;
-    text-align: center;
-  }
+  padding: 10px 12px !important;
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  text-align: left !important;
+  flex-wrap: nowrap !important;
+}
 
-  .d-flex.justify-content-between h5 {
-    width: 100%;
-    font-size: 14px;
-    margin: 0;
-  }
+.d-flex.justify-content-between h5 {
+  width: auto !important;
+  font-size: 18px;
+  margin: 0;
+  white-space: nowrap;
+}
 
-  .btn-danger {
-    font-size: 11px;
-    padding: 4px 8px;
-    min-height: 30px;
-  }
+.btn-danger {
+  font-size: 12px;
+  padding: 6px 10px;
+  min-height: auto;
+  white-space: nowrap;
+}
 
   .error-box,
   .success-box {
