@@ -25,9 +25,11 @@
 /* ================= HEADER ================= */
 .mask-custom .d-flex.justify-content-between {
   color: white;
-  gap: 10px;
-  flex-wrap: wrap;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
+  gap: 10px;
+  width: 100%;
 }
 
 /* ================= GLASS LOGIN ================= */
@@ -163,29 +165,36 @@
     min-height: 38px;
   }
 
-  .d-flex.justify-content-between {
-  padding: 10px 12px !important;
-  display: flex !important;
-  flex-direction: row !important;
-  justify-content: space-between !important;
-  align-items: center !important;
-  text-align: left !important;
-  flex-wrap: nowrap !important;
-}
+  /* MOBILE HEADER FIX */
+  .mask-custom .d-flex.justify-content-between {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100% !important;
+    padding: 12px 15px !important;
+    margin: 0 !important;
+    gap: 10px !important;
+    flex-wrap: nowrap !important;
+  }
 
-.d-flex.justify-content-between h5 {
-  width: auto !important;
-  font-size: 18px;
-  margin: 0;
-  white-space: nowrap;
-}
+  .mask-custom .d-flex.justify-content-between h5 {
+    margin: 0 !important;
+    font-size: 20px !important;
+    font-weight: 700;
+    white-space: nowrap;
+    flex: 1;
+    text-align: left !important;
+  }
 
-.btn-danger {
-  font-size: 12px;
-  padding: 6px 10px;
-  min-height: auto;
-  white-space: nowrap;
-}
+  .mask-custom .d-flex.justify-content-between .btn-danger {
+    margin: 0 !important;
+    padding: 6px 12px !important;
+    font-size: 13px !important;
+    border-radius: 8px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
 
   .error-box,
   .success-box {
@@ -213,5 +222,14 @@
 
   .field-error {
     font-size: 11px;
+  }
+
+  .mask-custom .d-flex.justify-content-between h5 {
+    font-size: 18px !important;
+  }
+
+  .mask-custom .d-flex.justify-content-between .btn-danger {
+    font-size: 12px !important;
+    padding: 5px 10px !important;
   }
 }
