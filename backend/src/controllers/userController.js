@@ -63,22 +63,47 @@ exports.getMyProfile = async (req, res) => {
   }
 };
 // 🚫 BLOCK USER
+// 🚫 BLOCK USER
 exports.blockUser = async (req, res) => {
   try {
     const myId = req.user.id;
     const { userIdToBlock } = req.body;
 
     if (!userIdToBlock) {
-      return res.status(400).json({ message: "User required" });
+      return res.status(400).json({
+        message: "User required",
+      });
+    }
+
+    // 🔥 Find target user
+    const targetUser = await User.findById(userIdToBlock);
+
+    if (!targetUser) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    // 🤖 Prevent blocking AI
+    if (
+      targetUser._id.toString() === process.env.AI_USER_ID
+    ) {
+      return res.status(400).json({
+        message: "AI Assistant cannot be blocked",
+      });
     }
 
     await User.findByIdAndUpdate(myId, {
       $addToSet: { blockedUsers: userIdToBlock },
     });
 
-    res.json({ message: "User blocked successfully" });
+    res.json({
+      message: "User blocked successfully",
+    });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({
+      error: err.message,
+    });
   }
 };
 

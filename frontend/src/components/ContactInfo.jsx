@@ -31,6 +31,13 @@ const ContactInfo = ({ user, messages, onClose }) => {
   }, []);
 
   if (!user) return null;
+  const isAIUser =
+  String(user?._id).trim() ===
+  String(process.env.REACT_APP_AI_USER_ID).trim();
+
+console.log("user id:", user?._id);
+console.log("ai id:", process.env.REACT_APP_AI_USER_ID);
+console.log("isAIUser:", isAIUser);
   // ghhg
     const handleDownload = async (url, filename = "file") => {
   try {
@@ -271,14 +278,19 @@ const ContactInfo = ({ user, messages, onClose }) => {
       </div>
 
       {/* BLOCK BUTTON */}
-      <div style={{ marginTop: "20px", textAlign: "center" }}>
-  <button
-    className={`block-btn ${isBlocked ? "unblock-btn" : ""}`}
-    onClick={() => setShowConfirm(true)}
-  >
-    {isBlocked ? `✅ Unblock ${user.name}` : `🚫 Block ${user.name}`}
-  </button>
-</div>
+      
+{!isAIUser && (
+  <div style={{ marginTop: "20px", textAlign: "center" }}>
+    <button
+      className={`block-btn ${isBlocked ? "unblock-btn" : ""}`}
+      onClick={() => setShowConfirm(true)}
+    >
+      {isBlocked
+        ? `✅ Unblock ${user.name}`
+        : `🚫 Block ${user.name}`}
+    </button>
+  </div>
+)}
     </div>
 
     {/* PREVIEW MODAL */}
